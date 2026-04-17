@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Кто хочет стать миллионером? — Филологический тур (40 вопросов)</title>
+    <style>
+        :root {
+            --bg: #071030;
+            --gold: #d4af37;
+            --gold-light: #f5e7a3;
+            --panel: rgba(255, 255, 255, 0.04);
+            --btn: #16345a;
+            --accent: #2a6fb8;
+            --text: #ffffff;
+            --muted: rgba(255, 255, 255, 0.6);
+            --correct: #1f8b4c;
+            --wrong: #b91c2c;
+            --life-bg: rgba(20, 40, 70, 0.8);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(1200px 400px at 10% 10%, rgba(255, 255, 255, 0.02), transparent),
+                linear-gradient(180deg, #041328 0%, var(--bg) 60%);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 24px auto;
+            padding: 20px;
+            display: flex;
+            gap: 24px;
+        }
+
+        .left {
+            flex: 2.4;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+            border-radius: 28px;
+            padding: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+        }
+
+        .right {
+            flex: 1.2;
+            background: var(--panel);
+            border-radius: 28px;
+            padding: 18px;
+            height: fit-content;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--gold), #b88c2b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #071030;
+            font-weight: 800;
+            font-size: 32px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            font-size: 22px;
+            margin: 0;
+            letter-spacing: -0.3px;
+        }
+
+        .small {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .meta {
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .meta .num {
+            font-size: 14px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .prize {
+            font-weight: 800;
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+
+        .panel {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 18px;
+            border-radius: 24px;
+            margin-bottom: 12px;
+        }
+
+        .question-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .question {
+            font-size: 22px;
+            padding: 12px 6px;
+            margin-bottom: 24px;
+            min-height: 80px;
+            font-weight: 600;
+            line-height: 1.35;
+        }
+
+        .answers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .ans-btn {
+            background: linear-gradient(145deg, #102a44, #0a1c30);
+            border-radius: 60px;
+            padding: 12px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .ans-btn:hover:not(.disabled-ans) {
+            transform: translateY(-2px);
+            background: linear-gradient(145deg, #1a3e62, #0e2a46);
+            border-color: rgba(212, 175, 55, 0.5);
+        }
+
+        .ans-letter {
+            width: 46px;
+            height: 46px;
+            border-radius: 46px;
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .lifelines {
+            display: flex;
+            gap: 14px;
+            margin: 20px 0 14px;
+        }
+
+        .life {
+            background: var(--life-bg);
+            padding: 10px 6px;
+            border-radius: 40px;
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            font-weight: 600;
+            transition: 0.1s;
+            backdrop-filter: blur(4px);
+        }
+
+        .life:hover:not(.disabled) {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: var(--gold);
+        }
+
+        .life.disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            filter: grayscale(0.2);
+        }
+
+        .controls {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: var(--accent);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 60px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            transition: 0.1s linear;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            background: #3c82d4;
+            transform: scale(0.98);
+        }
+
+        .btn.secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .ladder {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 550px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .ladder-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-radius: 14px;
+            background: transparent;
+            color: var(--muted);
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.1s;
+        }
+
+        .ladder-item.active {
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.28), rgba(212, 175, 55, 0.05));
+            color: var(--gold);
+            border-left: 3px solid var(--gold);
+            font-weight: 800;
+        }
+
+        .overlay {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(2, 6, 16, 0.88);
+            z-index: 100;
+            backdrop-filter: blur(6px);
+        }
+
+        .card {
+            background: linear-gradient(145deg, #0b1c34, #05152a);
+            padding: 28px;
+            border-radius: 32px;
+            max-width: 520px;
+            width: 90%;
+            color: var(--text);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .modal h2 {
+            margin: 0 0 12px;
+            color: var(--gold);
+        }
+
+        .modal p {
+            color: var(--muted);
+            line-height: 1.4;
+        }
+
+        footer {
+            margin-top: 20px;
+            color: var(--muted);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .correct-highlight {
+            background: linear-gradient(145deg, #1f8b4c, #136b3a) !important;
+            border-color: #6fcf97 !important;
+            box-shadow: 0 0 10px #2ecc71;
+        }
+
+        .wrong-highlight {
+            background: linear-gradient(145deg, #b91c2c, #8b1522) !important;
+            border-color: #e57373 !important;
+        }
+
+        .disabled-ans {
+            pointer-events: none;
+            opacity: 0.65;
+        }
+
+        @media (max-width: 800px) {
+            .container {
+                flex-direction: column;
+                padding: 14px;
+            }
+            .answers {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="left">
+        <header>
+            <div class="logo">₽</div>
+            <div>
+                <h1>Кто хочет стать миллионером?</h1>
+                <div class="small">📖 Русский язык | 40 вопросов повышенной сложности</div>
+            </div>
+            <div class="meta">
+                <div class="num">Вопрос <span id="qnum">—</span> / 40</div>
+                <div class="prize" id="currentPrize">0 ₽</div>
+            </div>
+        </header>
+
+        <div class="panel">
+            <div class="question-row">
+                <div class="small">Вопрос <span id="qNumber">—</span></div>
+                <div class="prize small">🏆 Несгораемая: <span id="safePrize">0 ₽</span></div>
+            </div>
+
+            <div class="question" id="questionText">Загрузка...</div>
+
+            <div class="answers" id="answers"></div>
+
+            <div class="lifelines">
+                <div class="life" id="life5050">🎲 50:50</div>
+                <div class="life" id="lifefriend">📞 Звонок другу</div>
+                <div class="life" id="lifeaud">👥 Помощь зала</div>
+            </div>
+
+            <div class="controls">
+                <button class="btn" id="nextBtn" disabled>➡ Далее</button>
+                <button class="btn secondary" id="restartBtn">🔄 Начать заново</button>
+                <div style="margin-left: auto; color: var(--gold); font-weight: bold;">💰 <span id="prizeDisplay">0 ₽</span></div>
+            </div>
+        </div>
+        <footer>✅ Зелёный — верный ответ. ❌ Красный — ошибка. Подсказки помогают выиграть миллион!</footer>
+    </div>
+
+    <aside class="right">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 14px;">
+            <div class="small">📊 Лестница выигрышей</div>
+            <div class="small">✨ Несгораемые: 5, 10, 15, 20, 25, 30, 35</div>
+        </div>
+        <div class="ladder" id="ladder"></div>
+    </aside>
+</div>
+
+<div id="modal" class="overlay" style="display: none;">
+    <div class="card modal">
+        <h2 id="modalTitle">Информация</h2>
+        <p id="modalText"></p>
+        <div id="modalExtra"></div>
+        <div style="text-align: right; margin-top: 18px;">
+            <button class="btn" id="modalClose">Понятно</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ---------- 40 ВОПРОСОВ (первые 29 + новые 30..40, причём 30=бывший 41, 31=бывший 42, остальные 32-40 по порядку) ----------
+    const QUESTIONS = [
+        { text: "В каком слове на месте пропуска пишется Е?", options: ["пр..зидент", "пр..небречь", "пр..вратности", "пр..зидиум"], correct: 0, prize: 500 },
+        { text: "В каком слове пропущена буква Ё?", options: ["ш..лковый", "ш..рох", "капюш..н", "ш..мпол"], correct: 0, prize: 1000 },
+        { text: "Укажите слово, в котором на месте пропуска пишется И?", options: ["ц..ган", "панц..рь", "ц..ркуль", "ц..ц"], correct: 2, prize: 2000 },
+        { text: "В каком ряду в обоих словах пропущена буква Я?", options: ["(они) бор..тся, (они) кле..т", "(они) бре..тся, (они) дыш..т", "(они) стел..т, (они) ла..т", "(они) се..т, (они) ве..т"], correct: 1, prize: 3000 },
+        { text: "В каком варианте НЕ со словом пишется раздельно?", options: ["(не)взрачный вид", "(не)годовать от боли", "далеко (не)красивый", "(не)настная погода"], correct: 2, prize: 5000 },
+        { text: "В каком предложении нужно поставить одну запятую? (Знаки не расставлены)", options: ["Ветер срывал с деревьев листья и разносил их по мокрой траве.", "Он быстро оглянулся но никого не увидел.", "Тучи рассеялись и над лесом засияло солнце.", "Мальчик сидел на крыльце и грыз семечки и насвистывал песенку."], correct: 1, prize: 8000 },
+        { text: "В каком слове пропущена буква А (чередование корня)?", options: ["выр..сли", "заг..релый", "к..сание", "прик..сновение"], correct: 0, prize: 12000 },
+        { text: "Укажите правильное объяснение постановки запятой: «Месяц светил ярко ( ) и вся степь осветилась таинственным светом».", options: ["Простое с однородными, запятая не нужна", "Сложносочинённое, запятая нужна", "ССП, запятая не нужна (общий второст. член)", "Простое, запятая нужна"], correct: 2, prize: 16000 },
+        { text: "В каком варианте оба слова пишутся через дефис?", options: ["(по)новому, (кое)кто", "(в)третьих, (пол)лимона", "(юго)запад, (средне)вековый", "(пол)украины, (изжелта)красный"], correct: 0, prize: 32000 },
+        { text: "В каком предложении нужна одна запятая при причастном обороте?", options: ["Покрытая инеем берёза переливалась на солнце.", "Мы подошли к дому стоявшему на краю села.", "Испуганный шорохом заяц умчался в лес.", "Окружённые со всех сторон водой острова были труднодоступны."], correct: 1, prize: 64000 },
+        { text: "Укажите фразеологизм со значением «бездельничать»:", options: ["бить баклуши", "точить лясы", "водить за нос", "зарубить на носу"], correct: 0, prize: 125000 },
+        { text: "В каком ряду оба слова являются паронимами?", options: ["эффектный – эффективный", "большой – огромный", "смеяться – хохотать", "быстрый – скорый"], correct: 0, prize: 125000 },
+        { text: "Укажите средства связи предложений в тексте: «Было жарко. Температура воздуха достигла тридцати градусов.»", options: ["синоним", "лексический повтор", "антоним", "союз"], correct: 0, prize: 250000 },
+        { text: "Какой тип речи представлен в отрывке? «Сначала небо покрылось синими тучами. Потом подул резкий ветер. Вдруг сверкнула молния...»", options: ["повествование", "описание", "рассуждение", "повествование с элементами описания"], correct: 0, prize: 250000 },
+        { text: "В каком предложении нужно поставить тире (знаки не расставлены)?", options: ["Травой зарастают могилы давно болью зарастает быль.", "Хорошая книга точно беседа с умным человеком.", "Я долго бродил по лесу но так ничего и не нашёл.", "Учёный любит своё дело и отдаёт ему все силы."], correct: 1, prize: 500000 },
+        { text: "Укажите средство связи предложений: «Вчера был сильный ветер. Из‑за него деревья в парке поломались.»", options: ["лексический повтор", "союз (подчинительный)", "местоимение", "наречие"], correct: 2, prize: 500000 },
+        { text: "В каком слове допущена ошибка в образовании формы?", options: ["лягте на пол", "более сладкий", "ихние вещи", "тремястами рублями"], correct: 2, prize: 1000000 },
+        { text: "В каком предложении нет грамматической ошибки (нормы управления)?", options: ["Согласно приказа директора.", "Оплатите за проезд.", "Уверенность в победе.", "По окончанию школы."], correct: 2, prize: 1500000 },
+        { text: "В каком словосочетании вид связи – примыкание?", options: ["быстро бежать", "деревянный дом", "читать книгу", "встретить друга"], correct: 0, prize: 2000000 },
+        { text: "Укажите предложение с обособленным приложением (знаки не расставлены):", options: ["Онегин добрый мой приятель родился на брегах Невы.", "Взволнованный этой новостью он вышел из комнаты.", "Усталые туристы остановились на ночлег.", "Пушкин великий русский поэт родился в Москве."], correct: 3, prize: 3000000 },
+        { text: "В каком предложении две запятые (знаки не расставлены)?", options: ["Он взял книгу и раскрыв её начал читать.", "Солнце выглянуло из‑за туч и осветило всё вокруг но тут же снова спряталось.", "Дети играли на улице несмотря на холодный ветер.", "Я думаю что он прав."], correct: 1, prize: 4000000 },
+        { text: "Укажите стиль речи отрывка: «Согласно статье 23 Конституции Республики Беларусь, каждый имеет право на неприкосновенность частной жизни.»", options: ["разговорный", "художественный", "официально-деловой", "публицистический"], correct: 2, prize: 5000000 },
+        { text: "В каком предложении верно расставлены запятые?", options: ["Мы вошли в зал, где уже собрались гости, и поздоровались.", "Мы вошли в зал где уже собрались гости, и поздоровались.", "Мы вошли в зал где уже собрались гости и поздоровались.", "Мы вошли в зал, где уже собрались гости и поздоровались."], correct: 0, prize: 6000000 },
+        { text: "Определите тип речи: «Байкал – удивительное озеро. Его вода необычайно прозрачна и чиста...»", options: ["повествование", "описание", "рассуждение", "повествование с описанием"], correct: 1, prize: 7000000 },
+        { text: "В каком варианте верно указаны цифры для запятых? «Он вышел на улицу (1) глубоко вздохнул (2) и (3) посмотрев на небо (4) улыбнулся.»", options: ["1, 2, 4", "1, 3, 4", "1, 4", "2, 3, 4"], correct: 2, prize: 8000000 },
+        { text: "В каком предложении знаки при прямой речи расставлены верно?", options: ["«Пора вставать» – сказала мама.", "«Пора вставать», сказала мама.", "«Пора вставать» сказала мама.", "«Пора вставать, – сказала мама»."], correct: 1, prize: 9000000 },
+        { text: "В каком предложении допущена речевая ошибка (плеоназм)?", options: ["Он вернулся обратно домой.", "Памятный сувенир вручили гостю.", "Свободная вакансия появилась в отделе.", "Все приведённые выше примеры содержат плеоназм."], correct: 3, prize: 10000000 },
+        { text: "В каком предложении допущена ошибка?", options: ["Подъезжая к городу, начался сильный ветер.", "Читая книгу, я делаю заметки.", "Вернувшись домой, он сразу позвонил.", "Услышав шум, собака насторожилась."], correct: 0, prize: 15000000 },
+        { text: "Как правильно оформить диалог?", options: ["– Привет! – сказал Петя. – Здравствуй, – ответил Коля.", "– Привет! – сказал Петя. – Здравствуй, – ответил Коля. (дубль)", "«Привет!» – сказал Петя. «Здравствуй», – ответил Коля.", "– Привет! – сказал Петя. – Здравствуй! – ответил Коля."], correct: 3, prize: 18000000 },
+        // 30-й вопрос (бывший 41)
+        { text: "В каком предложении нет пунктуационной ошибки?", options: ["Всё что он говорил было правдой.", "Деревья, которые посадили весной, уже зазеленели.", "Он проснулся, когда солнце уже взошло, и сразу встал.", "Поезд на который мы опоздали ушёл без нас."], correct: 1, prize: 19000000 },
+        // 31-й вопрос (бывший 42)
+        { text: "В каком варианте все выделенные слова пишутся правильно?", options: ["ЧТО(БЫ) ни случилось, он сделает это, НЕ(СМОТРЯ) на усталость, ТАК(ЖЕ) как и раньше.", "Он НЕ раз говорил, что НИ(КТО) иной, кроме него, не справится, и ПО(ЭТОМУ) мы доверили ему задание.", "В(ТЕЧЕНИЕ) всего дня НЕ было НИ души, ЗА(ТО) к вечеру народ подтянулся.", "(В)ВИДУ непогоды рейс отменили, (ПРИ)ЧЁМ без объяснения причин, (ПО)ЭТОМУ пассажиры возмущались."], correct: 3, prize: 20000000 },
+        // 32
+        { text: "В каком варианте НЕ с наречием пишется слитно?", options: ["ничуть (не)весело", "(не)ряшливо одет", "вовсе (не)интересно", "(не)громко, а тихо"], correct: 1, prize: 21000000 },
+        // 33
+        { text: "Укажите тип сказуемого в предложении: «Он был готов спорить до утра»", options: ["простое глагольное", "составное глагольное", "составное именное", "сложное сказуемое"], correct: 2, prize: 22000000 },
+        // 34
+        { text: "В каком предложении нужно поставить две запятые (знаки не расставлены)?", options: ["Все кто видел этот фильм были в восторге.", "Мы вышли из дома когда рассвело и отправились в путь.", "Дождь лил как из ведра но мы не стали возвращаться.", "Он подошёл к окну и увидев знакомую фигуру вышел на улицу."], correct: 1, prize: 23000000 },
+        // 35
+        { text: "Средство связи предложений в тексте: «Мне подарили книгу. Этот подарок стал самым дорогим.»", options: ["антоним", "местоимение", "лексический повтор", "союз"], correct: 1, prize: 24000000 },
+        // 36
+        { text: "В каком предложении допущена ошибка в употреблении падежной формы (нормы управления)?", options: ["Согласно расписанию поезд прибыл вовремя.", "Благодаря помощи друга я справился.", "Вопреки прогнозам погода наладилась.", "По приезду в город он позвонил."], correct: 3, prize: 25000000 },
+        // 37
+        { text: "В каком слове пишется НИ (частица)?", options: ["н.. разу не был", "н.. раз был", "н.. мог не прийти", "н.. кто иной, кроме"], correct: 0, prize: 26000000 },
+        // 38
+        { text: "Укажите предложение с обособленным обстоятельством (знаки не расставлены):", options: ["Устав после прогулки дети быстро уснули.", "Несмотря на усталость он продолжал работать.", "Дом стоявший на холме был виден издалека.", "Мальчик лет двенадцати вышел из леса."], correct: 1, prize: 27000000 },
+        // 39
+        { text: "В каком варианте оба выделенных слова пишутся слитно?", options: ["(ЗА)ТЕМ поворотом, что(БЫ) ни случилось", "(ТАК)ЖЕ, как и всегда, (ПО)ЭТОМУ пути", "(ПО)ЭТОМУ мосту ездить опасно, (ЗА)ТО красиво", "(В)ВИДУ дождя, (НА)ПОДОБИЕ треугольника"], correct: 3, prize: 28000000 },
+        // 40
+        { text: "В каком предложении верно объяснена постановка двоеточия?", options: ["Я оглянулся: никого не было. (двоеточие между частями БСП, вторая часть дополняет первую)", "Он опоздал по одной причине: проспал. (двоеточие после обобщающего слова)", "В лесу было тихо: только дятел стучал. (двоеточие между частями БСП, вторая часть указывает на причину)", "Погода испортилась: пошёл дождь. (двоеточие между частями БСП, вторая часть поясняет первую)"], correct: 0, prize: 30000000 }
+    ];
+
+    // Таблица выигрышей (по номерам вопросов 1..40)
+    const PRIZES_TABLE = [0, 500, 1000, 2000, 3000, 5000, 8000, 12000, 16000, 32000, 64000, 125000, 125000, 250000, 250000, 500000, 500000, 1000000, 1500000, 2000000, 3000000, 4000000, 5000000, 6000000, 7000000, 8000000, 9000000, 10000000, 15000000, 18000000, 19000000, 20000000, 21000000, 22000000, 23000000, 24000000, 25000000, 26000000, 27000000, 28000000, 30000000];
+    const SAFE_LEVELS = [5, 10, 15, 20, 25, 30, 35];
+
+    let currentIndex = 0;
+    let gameActive = true;
+    let answerLock = false;
+    let used5050 = false, usedFriend = false, usedAudience = false;
+    let currentCorrectIdx = -1;
+
+    const questionTextEl = document.getElementById("questionText");
+    const answersContainer = document.getElementById("answers");
+    const qnumSpan = document.getElementById("qnum");
+    const qNumberSpan = document.getElementById("qNumber");
+    const currentPrizeSpan = document.getElementById("currentPrize");
+    const prizeDisplaySpan = document.getElementById("prizeDisplay");
+    const safePrizeSpan = document.getElementById("safePrize");
+    const nextBtn = document.getElementById("nextBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const ladderEl = document.getElementById("ladder");
+    const life5050 = document.getElementById("life5050");
+    const lifeFriend = document.getElementById("lifefriend");
+    const lifeAud = document.getElementById("lifeaud");
+    const modal = document.getElementById("modal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalText = document.getElementById("modalText");
+    const modalExtra = document.getElementById("modalExtra");
+    const modalClose = document.getElementById("modalClose");
+
+    function getCurrentPrizeValue() { return PRIZES_TABLE[currentIndex] || 0; }
+    function getSafePrizeAmount() {
+        let safeAmount = 0;
+        for (let lvl of SAFE_LEVELS) if (currentIndex + 1 >= lvl) safeAmount = PRIZES_TABLE[lvl];
+        return safeAmount;
+    }
+
+    function buildLadder() {
+        ladderEl.innerHTML = "";
+        for (let i = PRIZES_TABLE.length - 1; i >= 1; i--) {
+            const div = document.createElement("div");
+            div.className = "ladder-item";
+            if (currentIndex === i) div.classList.add("active");
+            div.innerHTML = `<span>Вопрос ${i}</span><span>${PRIZES_TABLE[i].toLocaleString()} ₽</span>`;
+            ladderEl.appendChild(div);
+        }
+    }
+
+    function updateUI() {
+        const displayIdx = currentIndex + 1;
+        qnumSpan.innerText = displayIdx;
+        qNumberSpan.innerText = displayIdx;
+        const currPrize = getCurrentPrizeValue();
+        currentPrizeSpan.innerText = `${currPrize.toLocaleString()} ₽`;
+        prizeDisplaySpan.innerText = `${currPrize.toLocaleString()} ₽`;
+        safePrizeSpan.innerText = `${getSafePrizeAmount().toLocaleString()} ₽`;
+        buildLadder();
+    }
+
+    function showModal(title, text, extraHtml = "") {
+        modalTitle.innerText = title;
+        modalText.innerText = text;
+        modalExtra.innerHTML = extraHtml;
+        modal.style.display = "flex";
+    }
+
+    function closeModal() { modal.style.display = "none"; modalExtra.innerHTML = ""; }
+
+    function endGame(isVictory = false, isWrong = false) {
+        if (!gameActive) return;
+        gameActive = false;
+        answerLock = true;
+        if (isVictory && currentIndex + 1 === QUESTIONS.length) {
+            const winSum = PRIZES_TABLE[QUESTIONS.length];
+            showModal("🏆 АБСОЛЮТНАЯ ПОБЕДА 🏆", `Поздравляем! Вы ответили на все 40 вопросов и выиграли ${winSum.toLocaleString()} ₽!`, "<div style='color:gold; margin-top:8px;'>Гениальное знание русского языка!</div>");
+        } else if (isWrong) {
+            const safe = getSafePrizeAmount();
+            const correctAnswerText = QUESTIONS[currentIndex].options[QUESTIONS[currentIndex].correct];
+            showModal("❌ Неправильный ответ", `Игра окончена. Ваш выигрыш составляет ${safe.toLocaleString()} ₽.`, `<div style="margin-top:8px;">✔️ Правильный ответ: "${correctAnswerText}"</div>`);
+        }
+        nextBtn.disabled = true;
+        disableAnswers(true);
+    }
+
+    function disableAnswers(disabled) {
+        document.querySelectorAll(".ans-btn").forEach(btn => {
+            if (disabled) btn.classList.add("disabled-ans");
+            else btn.classList.remove("disabled-ans");
+        });
+    }
+
+    function resetAnswerStyles() {
+        document.querySelectorAll(".ans-btn").forEach(btn => {
+            btn.classList.remove("correct-highlight", "wrong-highlight");
+            btn.style.opacity = "";
+            btn.style.pointerEvents = "";
+            btn.style.textDecoration = "";
+        });
+    }
+
+    function loadQuestion() {
+        if (!gameActive) return;
+        answerLock = false;
+        resetAnswerStyles();
+        const q = QUESTIONS[currentIndex];
+        currentCorrectIdx = q.correct;
+        questionTextEl.innerText = q.text;
+        answersContainer.innerHTML = "";
+        const letters = ["А", "Б", "В", "Г"];
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement("div");
+            btn.className = "ans-btn";
+            btn.setAttribute("data-idx", idx);
+            btn.innerHTML = `<div class="ans-letter">${letters[idx]}</div><div>${opt}</div>`;
+            btn.addEventListener("click", () => { if (!answerLock && gameActive) handleAnswer(idx); });
+            answersContainer.appendChild(btn);
+        });
+        updateUI();
+        nextBtn.disabled = true;
+        disableAnswers(false);
+    }
+
+    function handleAnswer(selectedIdx) {
+        if (answerLock || !gameActive) return;
+        answerLock = true;
+        const isCorrect = (selectedIdx === currentCorrectIdx);
+        const btns = document.querySelectorAll(".ans-btn");
+        btns.forEach((btn, idx) => {
+            if (idx === currentCorrectIdx) btn.classList.add("correct-highlight");
+            if (idx === selectedIdx && !isCorrect) btn.classList.add("wrong-highlight");
+        });
+        if (isCorrect) {
+            if (currentIndex + 1 === QUESTIONS.length) { endGame(true, false); return; }
+            nextBtn.disabled = false;
+        } else { endGame(false, true); }
+    }
+
+    function nextQuestion() {
+        if (!gameActive || !answerLock) return;
+        if (nextBtn.disabled && currentIndex + 1 !== QUESTIONS.length) return;
+        if (currentIndex + 1 <= QUESTIONS.length) {
+            currentIndex++;
+            if (currentIndex >= QUESTIONS.length) { endGame(true, false); return; }
+            answerLock = false;
+            loadQuestion();
+        }
+    }
+
+    function restartGame() {
+        gameActive = true;
+        currentIndex = 0;
+        used5050 = false; usedFriend = false; usedAudience = false;
+        answerLock = false;
+        updateLifeButtons();
+        loadQuestion();
+        closeModal();
+    }
+
+    function updateLifeButtons() {
+        if (used5050) life5050.classList.add("disabled"); else life5050.classList.remove("disabled");
+        if (usedFriend) lifeFriend.classList.add("disabled"); else lifeFriend.classList.remove("disabled");
+        if (usedAudience) lifeAud.classList.add("disabled"); else lifeAud.classList.remove("disabled");
+    }
+
+    function use5050() {
+        if (used5050 || answerLock || !gameActive) return;
+        used5050 = true;
+        updateLifeButtons();
+        let wrongIndices = [];
+        for (let i = 0; i < 4; i++) if (i !== currentCorrectIdx) wrongIndices.push(i);
+        wrongIndices.sort(() => Math.random() - 0.5);
+        const toRemove = wrongIndices.slice(0, 2);
+        const btns = document.querySelectorAll(".ans-btn");
+        btns.forEach((btn, idx) => { if (toRemove.includes(idx)) { btn.style.opacity = "0.4"; btn.style.pointerEvents = "none"; btn.style.textDecoration = "line-through"; } });
+        showModal("50:50", "Два неправильных варианта скрыты!", "<div>Теперь выбрать правильный легче!</div>");
+    }
+
+    function useFriend() {
+        if (usedFriend || answerLock || !gameActive) return;
+        usedFriend = true;
+        updateLifeButtons();
+        const correctLetter = String.fromCharCode(65 + currentCorrectIdx);
+        showModal("📞 Звонок другу", `Друг уверен: правильный вариант — ${correctLetter}: "${QUESTIONS[currentIndex].options[currentCorrectIdx]}". Надеюсь, это поможет!`, "<div style='font-style:italic'>Друг — филолог, почти не ошибается!</div>");
+    }
+
+    function useAudience() {
+        if (usedAudience || answerLock || !gameActive) return;
+        usedAudience = true;
+        updateLifeButtons();
+        let probs = [0,0,0,0];
+        const correctIdx = currentCorrectIdx;
+        for (let i=0;i<4;i++) probs[i] = (i===correctIdx) ? 62+Math.floor(Math.random()*20) : 5+Math.floor(Math.random()*12);
+        let sum = probs.reduce((a,b)=>a+b,0);
+        probs = probs.map(p=>Math.floor((p/sum)*100));
+        let diff = 100 - probs.reduce((a,b)=>a+b,0);
+        probs[0] += diff;
+        const letters = ["А","Б","В","Г"];
+        let barHtml = `<div style="margin-top:12px;"><strong>Зал голосует:</strong><div style="display:flex; gap:12px; margin-top:10px;">`;
+        for(let i=0;i<4;i++) barHtml += `<div style="flex:1; text-align:center;"><div style="background:#2a6fb8; height:${probs[i]}px; width:100%; border-radius:8px;"></div><span>${letters[i]}: ${probs[i]}%</span></div>`;
+        barHtml += `</div><div class="small" style="margin-top:10px;">Большинство склоняется к ${letters[correctIdx]}</div></div>`;
+        showModal("👥 Помощь зала", "Статистика голосования зрителей:", barHtml);
+    }
+
+    life5050.addEventListener("click", use5050);
+    lifeFriend.addEventListener("click", useFriend);
+    lifeAud.addEventListener("click", useAudience);
+    nextBtn.addEventListener("click", nextQuestion);
+    restartBtn.addEventListener("click", restartGame);
+    modalClose.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+
+    function init() { buildLadder(); loadQuestion(); }
+    init();
+</script>
+</body>
+</html>
